@@ -15,26 +15,31 @@ class FileStorage:
     def all(self):
         '''returns the dictionary __objects
         '''
-        return FileStorage.__objects
+        return self.__objects
 
     def new(self, obj):
         ''' sets in __objects the obj with key <obj class name>.id
         '''
-        FileStorage.__objects["{}.{}".format(obj.__class__.__name__,
-                                             obj.id)] = obj.to_dict()
+        self.__objects["{}.{}".format(obj.__class__.__name__,
+                                             obj.id)] = obj
 
     def save(self):
         '''serializes __objects to the JSON file (path: __file_path)
         '''
 
+        dummy = {}
+        for key, value in self.__objects.items():
+            dummy[key] = value.to_dict()
+
         with open(FileStorage.__file_path, mode="w") as write_file:
-            write_file.write(json.dumps(FileStorage.__objects))
+            write_file.write(json.dumps(dummy))
 
     def reload(self):
         '''deserializes the JSON file to __objects
         '''
+        print(__name__)
         try:
-            with open(FileStorage.__file_path, mode="r") as read_file:
+            with open(self.__file_path, mode="r") as read_file:
                 FileStorage.__objects = json.loads(read_file.read())
         except Exception:
             pass
