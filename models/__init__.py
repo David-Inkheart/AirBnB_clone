@@ -1,3 +1,4 @@
+#if __name__ == "__main__":
 from models.engine.file_storage import FileStorage
 
 storage = FileStorage()

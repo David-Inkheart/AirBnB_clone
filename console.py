@@ -94,12 +94,12 @@ class HBNBCommand(cmd.Cmd):
         instances based or not on the class name'''
         storage = FileStorage().all()
         if not arg:
-            print([j for i, j in storage.items()])
+            print([j.__str__() for i, j in storage.items()])
         else:
             class_list = []
             for key in storage:
                 if arg in key.split('.'):
-                    class_list.append(storage[key])
+                    class_list.append(storage[key].__str__())
             if len(class_list) != 0:
                 print(class_list)
             else:
