@@ -48,6 +48,8 @@ class BaseModel:
         '''returns a dictionary containing all keys/values
         of __dict__ of the instance
         '''
+        print(type(self.created_at))
+        print(type(self.updated_at))
         self.created_at = self.created_at.isoformat()
         self.updated_at = self.updated_at.isoformat()
         res = self.__dict__.copy()

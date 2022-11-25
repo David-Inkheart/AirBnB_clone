@@ -8,8 +8,11 @@ the entry point of the command interpreter
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
 import cmd
+import json
 import models
+import re
 import sys
+
 
 
 class HBNBCommand(cmd.Cmd):
@@ -49,21 +52,85 @@ class HBNBCommand(cmd.Cmd):
         based on the class name and id
         '''
         arg_list = arg.split(' ')
-        arg_list.append('x')
+        arg_list.append('#')
+        storage = FileStorage().all()
         if arg_list[0] == '':
            print('** class name missing **')
-        elif arg_list[0] != 'BaseModel':
-           print("** class doesn't exist **")
-        elif arg_list[1] == 'x':
-           print('** instance id missing **')
+        elif arg_list[0] and arg_list[1] == '#':
+            for key in storage:
+                if arg_list[0] in key.split('.'):
+                    print("** instance id missing **")
+                    return
+            print("** class doesn't exist **")
         elif arg_list[1]:
-            storage = FileStorage().all()
             for key in storage:
                 if key == 'BaseModel.' + arg_list[1]:
-                    print(BaseModel(storage[key]))
-                    return 
+                    print(storage[key])
+                    return
             print('** no instance found **')
-                
+
+    def do_destroy(self, arg):
+        '''Deletes an instance based on the class name and id'''
+        arg_list = arg.split(' ')
+        arg_list.append('#')
+        storage = FileStorage().all()
+        if arg_list[0] == '':
+            print("** class name missing **")
+        elif arg_list[0] and arg_list[1] == '#':
+            for key in storage:
+                if arg_list[0] in key.split('.'):
+                    print("** instance id missing **")
+                    return
+            print("** class doesn't exist **")
+        elif arg_list[1]:
+            for key in storage:
+                if key == 'BaseModel.' + arg_list[1]:
+                    storage.pop(key)
+                    return
+            print('** no instance found **')
+
+    def do_all(self, arg):
+        '''Prints all string representation of all
+        instances based or not on the class name'''
+        storage = FileStorage().all()
+        if not arg:
+            print([j for i, j in storage.items()])
+        else:
+            class_list = []
+            for key in storage:
+                if arg in key.split('.'):
+                    class_list.append(storage[key])
+            if len(class_list) != 0:
+                print(class_list)
+            else:
+                print("** class doesn't exist **")
+
+    def do_update(self, arg):
+        ''' Updates an instance based on the class
+        name and id by adding or updating attribute'''
+        arg_list = arg.split(' ')
+        arg_list.append('#')
+        storage = FileStorage().all()
+        if arg_list[0] == '':
+            print("** class name missing **")
+        elif arg_list[0] and arg_list[1] == '#':
+            for key in storage:
+                if arg_list[0] in key.split('.'):
+                    print("** instance id missing **")
+                    return
+            print("** class doesn't exist **")
+        elif arg_list[1]:
+            for key in storage:
+                if key == 'BaseModel.' + arg_list[1]:
+                    if arg_list[2] == '#':
+                        print("** attribute name missing **")
+                    elif arg_list[3] == '#':
+                        print("** value missing **")
+                    else:
+                        setattr(storage[key], arg_list[2], arg_list[3])
+                        storage[key].save()
+                    return
+            print('** no instance found **')
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
