@@ -1,3 +1,4 @@
+#if __name__ != "models.base_model":
 from models.engine import file_storage
 
 storage = file_storage.FileStorage()

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 '''
-program called console.py that contains
+77program called console.py that contains
 the entry point of the command interpreter
 '''
 
@@ -12,7 +12,6 @@ import json
 import models
 import re
 import sys
-
 
 
 class HBNBCommand(cmd.Cmd):
@@ -39,13 +38,13 @@ class HBNBCommand(cmd.Cmd):
         saves it (to the JSON file) and prints the id
         '''
         if not arg:
-            print ('** class name missing **')
+            print('** class name missing **')
         elif arg == 'BaseModel':
             x = BaseModel()
             x.save()
             print(x.id)
         elif arg[0] != 'BaseModel':
-            print ("** class doesn't exist **")
+            print("** class doesn't exist **")
 
     def do_show(self, arg):
         '''Prints the string representation of an instance
@@ -55,16 +54,17 @@ class HBNBCommand(cmd.Cmd):
         arg_list.append('#')
         storage = FileStorage().all()
         if arg_list[0] == '':
-           print('** class name missing **')
+            print('** class name missing **')
         elif arg_list[0] and arg_list[1] == '#':
             for key in storage:
+                print("key: {}".format(key))
                 if arg_list[0] in key.split('.'):
                     print("** instance id missing **")
                     return
             print("** class doesn't exist **")
         elif arg_list[1]:
             for key in storage:
-                if key == 'BaseModel.' + arg_list[1]:
+                if key == arg_list[0] + "." + arg_list[1]:
                     print(storage[key])
                     return
             print('** no instance found **')
@@ -84,7 +84,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         elif arg_list[1]:
             for key in storage:
-                if key == 'BaseModel.' + arg_list[1]:
+                if key == arg_list[0] + '.' + arg_list[1]:
                     storage.pop(key)
                     return
             print('** no instance found **')
@@ -121,16 +121,18 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         elif arg_list[1]:
             for key in storage:
-                if key == 'BaseModel.' + arg_list[1]:
+                if key == arg_list[0] + '.' + arg_list[1]:
                     if arg_list[2] == '#':
                         print("** attribute name missing **")
                     elif arg_list[3] == '#':
                         print("** value missing **")
                     else:
-                        setattr(storage[key], arg_list[2], arg_list[3])
+                        setattr(storage[key], arg_list[2],
+                                json.loads(arg_list[3]))
                         storage[key].save()
                     return
             print('** no instance found **')
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()

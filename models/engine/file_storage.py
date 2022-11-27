@@ -5,6 +5,7 @@ JSON file and deserializes JSON file to instances
 '''
 import json
 
+
 class FileStorage:
     '''seralizes and deserializes instances
     '''
@@ -20,8 +21,7 @@ class FileStorage:
         ''' sets in __objects the obj with key <obj class name>.id
         '''
         self.__objects["{}.{}".format(obj.__class__.__name__,
-                                             obj.id)] = obj
-        print("{}: {}".format("##############", self.__objects))
+                                      obj.id)] = obj
 
     def save(self):
         '''serializes __objects to the JSON file (path: __file_path)
@@ -36,12 +36,11 @@ class FileStorage:
     def reload(self):
         '''deserializes the JSON file to __objects
         '''
-        '''
-        with open(self.__file_path, mode="r") as read_file:
-            dummy = json.loads(read_file.read())
-        for key, value in dummy.items():
-            self.__objects[key] = BaseModel(dummy)
-
-        print("Reloaded Objects: {}".format(self.__objects))
-        '''
-        pass
+        from models.base_model import BaseModel
+        try:
+            with open(self.__file_path, mode="r") as read_file:
+                dummy = json.loads(read_file.read())
+            for key, value in dummy.items():
+                self.__objects[key] = BaseModel(**value)
+        except FileNotFoundError:
+            pass
