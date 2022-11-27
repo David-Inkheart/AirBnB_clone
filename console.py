@@ -1,17 +1,21 @@
 #!/usr/bin/python3
 '''
-77program called console.py that contains
+program called console.py that contains
 the entry point of the command interpreter
 '''
 
 
-from models.engine.file_storage import FileStorage
-from models.base_model import BaseModel
 import cmd
 import json
-import models
-import re
-import sys
+from models.engine.file_storage import FileStorage
+from models.base_model import BaseModel
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.user import User
+from models.amenity import Amenity
+
 
 
 class HBNBCommand(cmd.Cmd):
@@ -37,20 +41,13 @@ class HBNBCommand(cmd.Cmd):
         '''Creates a new instance of BaseModel
         saves it (to the JSON file) and prints the id
         '''
-        holder = {"BaseModel": BaseModel(),
+        '''holder = {"BaseModel": BaseModel(),
                   "User": User(), "Place": Place(),
                   "State": State(), "City": City(),
-                  "Amenity": Amenity(), "Review": Review()}
+                  "Amenity": Amenity(), "Review": Review()}'''
         if not arg:
             print('** class name missing **')
-        else:
-            for key in holder:
-                if key == arg:
-                    inst = holder[key]
-                    break
-            print("** class doesn't exist **")
-            return
-        '''elif arg == 'BaseModel':
+        elif arg == 'BaseModel':
             inst = BaseModel()
         elif arg == "User":
             inst = User()
@@ -58,7 +55,7 @@ class HBNBCommand(cmd.Cmd):
             inst = Place()
         elif arg == "State":
             inst = State()
-        elif aeg == "City":
+        elif arg == "City":
             inst = City()
         elif arg == "Amenity":
             inst = Amenity()
@@ -66,7 +63,7 @@ class HBNBCommand(cmd.Cmd):
             inst = Review()
         else:
             print("** class doesn't exist **")
-            return'''
+            return
         inst.save()
         print(inst.id)
 
@@ -155,6 +152,13 @@ class HBNBCommand(cmd.Cmd):
                         storage[key].save()
                     return
             print('** no instance found **')
+
+    def emptyline(self):
+        """
+        When an empty line is entered in response to the prompt,
+        it won't repeat the last nonempty command entered.
+        """
+        pass
 
 
 if __name__ == '__main__':
