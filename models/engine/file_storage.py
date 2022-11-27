@@ -4,14 +4,14 @@ class FileStorage that serializes instances to a
 JSON file and deserializes JSON file to instances
 '''
 import json
-from models.amenity import Amenity
+'''from models.amenity import Amenity
 from models.base_model import BaseModel
 from models.city import City
 from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
-from os import path
+from os import path'''
 
 
 class FileStorage:
@@ -45,11 +45,11 @@ class FileStorage:
     def reload(self):
         '''deserializes the JSON file to __objects
         '''
-        print(__name__)
+        from models.base_model import BaseModel
         try:
             with open(self.__file_path, mode="r") as read_file:
                 dummy = json.loads(read_file.read())
-                for key, value in dummy.items():
-                    self.__objects[key] = eval(value['__class__'])(**value)
-        except Exception:
+            for key, value in dummy.items():
+                self.__objects[key] = BaseModel(**value)
+        except FileNotFoundError:
             pass
