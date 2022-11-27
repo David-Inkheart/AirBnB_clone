@@ -48,14 +48,10 @@ class BaseModel:
         '''returns a dictionary containing all keys/values
         of __dict__ of the instance
         '''
-        if type(self.created_at) is str:
-            self.created_at = datetime.strptime(
-                self.created_at, '%Y-%m-%dT%H:%M:%S.%f')
-        if type(self.updated_at) is str:
-            self.updated_at = datetime.strptime(
-                self.updated_at, '%Y-%m-%dT%H:%M:%S.%f')
-        self.created_at = self.created_at.isoformat()
-        self.updated_at = self.updated_at.isoformat()
+        if type(self.created_at) is not str:
+            self.created_at = self.created_at.isoformat()
+        if type(self.updated_at) is not str:
+            self.updated_at = self.updated_at.isoformat()
         res = self.__dict__.copy()
         res['__class__'] = self.__class__.__name__
         return res

@@ -4,6 +4,7 @@ class FileStorage that serializes instances to a
 JSON file and deserializes JSON file to instances
 '''
 import json
+from datetime import datetime
 '''from models.city import City
 from models.place import Place
 from models.review import Review
@@ -31,12 +32,19 @@ class FileStorage:
     def save(self):
         '''serializes __objects to the JSON file (path: __file_path)
         '''
-        dummy = {}
-        for key, value in self.__objects.items():
+        dummy = self.__objects.copy()
+        for key, value in dummy.items():
             dummy[key] = value.to_dict()
 
         with open(FileStorage.__file_path, mode="w") as write_file:
             write_file.write(json.dumps(dummy))
+
+        for key, value in self.__objects.items():
+            value.created_at = datetime.strptime(
+                value.created_at, '%Y-%m-%dT%H:%M:%S.%f')
+            value.updated_at = datetime.strptime(
+                value.updated_at, '%Y-%m-%dT%H:%M:%S.%f')
+
 
     def reload(self):
         '''deserializes the JSON file to __objects
