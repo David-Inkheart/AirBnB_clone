@@ -1,7 +1,8 @@
 # AirBnB Clone - The Console
 
   
-![](https://github.com/David-Inkheart/AirBnB_clone/blob/feature/console/AirBnB.png?raw=true)
+https://s3.amazonaws.com/alx-intranet.hbtn.io/uploads/medias/2018/6/65f4a1dd9c51265f49d0.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIARDDGGGOUSBVO6H7D%2F20221127%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20221127T202758Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=8f6f48047020e552dfafc901ab7188ddda873be2a55cb1a05bc87c5e2a059502
+
 Welcome to the AirBnB clone project!
 
 ## Getting Started
