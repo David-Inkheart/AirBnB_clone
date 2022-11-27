@@ -4,6 +4,14 @@ class FileStorage that serializes instances to a
 JSON file and deserializes JSON file to instances
 '''
 import json
+from models.amenity import Amenity
+from models.base_model import BaseModel
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.user import User
+from os import path
 
 
 class FileStorage:
@@ -40,6 +48,8 @@ class FileStorage:
         print(__name__)
         try:
             with open(self.__file_path, mode="r") as read_file:
-                FileStorage.__objects = json.loads(read_file.read())
+                dummy = json.loads(read_file.read())
+                for key, value in dummy.items():
+                    self.__objects[key] = eval(value['__class__'])(**value)
         except Exception:
             pass

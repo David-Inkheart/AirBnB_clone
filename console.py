@@ -10,6 +10,13 @@ from models.base_model import BaseModel
 import cmd
 import models
 import sys
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
+import re
 
 
 class HBNBCommand(cmd.Cmd):
@@ -63,6 +70,13 @@ class HBNBCommand(cmd.Cmd):
                     print(BaseModel(storage[key]))
                     return 
             print('** no instance found **')
+
+    def emptyline(self):
+        """
+        When an empty line is entered in response to the prompt,
+        it won't repeat the last nonempty command entered.
+        """
+        pass
 
                 
 
