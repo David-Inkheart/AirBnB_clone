@@ -41,10 +41,6 @@ class HBNBCommand(cmd.Cmd):
         '''Creates a new instance of BaseModel
         saves it (to the JSON file) and prints the id
         '''
-        '''holder = {"BaseModel": BaseModel(),
-                  "User": User(), "Place": Place(),
-                  "State": State(), "City": City(),
-                  "Amenity": Amenity(), "Review": Review()}'''
         if not arg:
             print('** class name missing **')
         elif arg == 'BaseModel':
