@@ -37,14 +37,38 @@ class HBNBCommand(cmd.Cmd):
         '''Creates a new instance of BaseModel
         saves it (to the JSON file) and prints the id
         '''
+        holder = {"BaseModel": BaseModel(),
+                  "User": User(), "Place": Place(),
+                  "State": State(), "City": City(),
+                  "Amenity": Amenity(), "Review": Review()}
         if not arg:
             print('** class name missing **')
-        elif arg == 'BaseModel':
-            x = BaseModel()
-            x.save()
-            print(x.id)
-        elif arg[0] != 'BaseModel':
+        else:
+            for key in holder:
+                if key == arg:
+                    inst = holder[key]
+                    break
             print("** class doesn't exist **")
+            return
+        '''elif arg == 'BaseModel':
+            inst = BaseModel()
+        elif arg == "User":
+            inst = User()
+        elif arg == "Place":
+            inst = Place()
+        elif arg == "State":
+            inst = State()
+        elif aeg == "City":
+            inst = City()
+        elif arg == "Amenity":
+            inst = Amenity()
+        elif arg == "Review":
+            inst = Review()
+        else:
+            print("** class doesn't exist **")
+            return'''
+        inst.save()
+        print(inst.id)
 
     def do_show(self, arg):
         '''Prints the string representation of an instance
@@ -57,7 +81,6 @@ class HBNBCommand(cmd.Cmd):
             print('** class name missing **')
         elif arg_list[0] and arg_list[1] == '#':
             for key in storage:
-                print("key: {}".format(key))
                 if arg_list[0] in key.split('.'):
                     print("** instance id missing **")
                     return
