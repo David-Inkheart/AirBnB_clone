@@ -48,10 +48,12 @@ class FileStorage:
             write_file.write(json.dumps(dummy))
 
         for key, value in self.__objects.items():
-            value.created_at = datetime.strptime(
-                value.created_at, '%Y-%m-%dT%H:%M:%S.%f')
-            value.updated_at = datetime.strptime(
-                value.updated_at, '%Y-%m-%dT%H:%M:%S.%f')
+            if type(value.created_at) is str:
+                value.created_at = datetime.strptime(
+                    value.created_at, '%Y-%m-%dT%H:%M:%S.%f')
+            if type(value.updated_at) is str:
+                value.updated_at = datetime.strptime(
+                    value.updated_at, '%Y-%m-%dT%H:%M:%S.%f')
 
     def reload(self):
         '''deserializes the JSON file to __objects
