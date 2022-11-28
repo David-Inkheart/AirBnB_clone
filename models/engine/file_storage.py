@@ -40,6 +40,15 @@ class FileStorage:
         for key, value in self.__objects.items():
             dummy[key] = value.to_dict()
         '''
+        from models.base_model import BaseModel
+        from models.amenity import Amenity
+        from models.base_model import BaseModel
+        from models.city import City
+        from models.place import Place
+        from models.review import Review
+        from models.state import State
+        from models.user import User
+
         dummy = self.__objects.copy()
         for key, value in dummy.items():
             dummy[key] = value.to_dict()
