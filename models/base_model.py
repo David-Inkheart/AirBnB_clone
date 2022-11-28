@@ -2,10 +2,9 @@
 '''
 class BaseModel that defines all common attributes/methods
 for other classes
-'''
+import models'''
 from datetime import datetime
 import uuid
-#import models
 from models import storage
 
 
@@ -16,7 +15,6 @@ class BaseModel:
             for key, value in kwargs.items():
                 if key in ('created_at', 'updated_at'):
                     value = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
-                
                 if key != '__class__':
                         setattr(self, key, value)
         else:

@@ -30,7 +30,7 @@ class FileStorage:
         ''' sets in __objects the obj with key <obj class name>.id
         '''
         self.__objects["{}.{}".format(obj.__class__.__name__,
-                                             obj.id)] = obj
+                                      obj.id)] = obj
 
     def save(self):
         '''serializes __objects to the JSON file (path: __file_path)
@@ -64,7 +64,6 @@ class FileStorage:
         from models.review import Review
         from models.state import State
         from models.user import User
-
 
         try:
             with open(self.__file_path, mode="r") as read_file:

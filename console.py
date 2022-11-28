@@ -14,9 +14,9 @@ from models.review import Review
 from models.state import State
 from models.user import User
 from models.amenity import Amenity
-#import models
-#import sys
-#import re
+'''import models
+import sys
+import re'''
 
 
 class HBNBCommand(cmd.Cmd):
@@ -169,8 +169,6 @@ class HBNBCommand(cmd.Cmd):
                         print("** instance id missing **")
                         return
             print("** class doesn't exist **")
-            
-
 
     def emptyline(self):
         """
@@ -179,7 +177,6 @@ class HBNBCommand(cmd.Cmd):
         """
         pass
 
-                
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
