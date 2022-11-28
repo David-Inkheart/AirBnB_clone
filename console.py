@@ -14,9 +14,9 @@ from models.review import Review
 from models.state import State
 from models.user import User
 from models.amenity import Amenity
-'''import models
-import sys
-import re'''
+import re
+import models
+'''import sys'''
 
 
 class HBNBCommand(cmd.Cmd):
@@ -26,6 +26,9 @@ class HBNBCommand(cmd.Cmd):
     intro = None
     prompt = '(hbnb) '
     file = 'file.json'
+    check_class = {"Amenity": Amenity, "BaseModel": BaseModel,
+                   "City": City, "Place": Place, "Review": Review,
+                   "State": State, "User": User}
 
     ''' ------basic console commands----- '''
 
@@ -176,6 +179,51 @@ class HBNBCommand(cmd.Cmd):
         it won't repeat the last nonempty command entered.
         """
         pass
+
+    def get_objects(self, instance=''):
+        """
+        Args:
+            instance (:obj:`str`, optional): The instance to finds into
+                the objects.
+        Returns:
+            list: If the `instance` argument is not empty, it will search
+            only for objects that match the instance. Otherwise, it will show
+            all instances in the file where all objects are stored.
+        """
+        objects = models.storage.all()
+
+        if instance:
+            keys = objects.keys()
+            return [str(val) for key, val in objects.items()
+                    if key.startswith(instance)]
+
+        return [str(val) for key, val in objects.items()]
+
+    def default(self, line):
+        """
+        When the command prefix is not recognized, this method
+        looks for whether the command entered has the syntax:
+            "<class name>.<method name>" or not,
+        and links it to the corresponding method in case the
+        class exists and the method belongs to the class.
+        """
+
+        if '.' in line:
+            splitted = re.split(r'\.|\(|\)', line)
+            class_name = splitted[0]
+            method_name = splitted[1]
+
+            if class_name in self.check_class:
+                if method_name == 'all':
+                    print(self.get_objects(class_name))
+                elif method_name == 'count':
+                    print(len(self.get_objects(class_name)))
+                elif method_name == 'show':
+                    class_id = splitted[2][1:-1]
+                    self.do_show(class_name + ' ' + class_id)
+                elif method_name == 'destroy':
+                    class_id = splitted[2][1:-1]
+                    self.do_destroy(class_name + ' ' + class_id)
 
 
 if __name__ == '__main__':
