@@ -91,5 +91,55 @@ $
 
 ```
 
-## Examples
+## Usage Examples
 
+**Launching the console**
+```
+$ ./console.py
+(hbnb)
+```
+**Creating a new object**
+```
+(hbnb) create
+** class name missing **
+(hbnb) create User
+49faff9a-6318-451f-87b6-910505c55907
+```
+**Show an object**
+```
+(hbnb) show User
+** instance id missing **
+(hbnb) show User 49faff9a-6318-451f-87b6-910505c55907
+[User] (49faff9a-6318-451f-87b6-910505c55907) {'created_at': datetime.datetime(
+2017, 10, 2, 3, 10, 25, 903293), 'id': '49faff9a-6318-451f-87b6-910505c55907',
+ 'updated_at': datetime.datetime(2017, 10, 2, 3, 10, 25, 903300)}
+```
+**Update an object**
+```
+(hbnb) update
+** class name missing **
+(hbnb) update User
+** instance id missing **
+(hbnb) update User 49faff9a-6318-451f-87b6-910505c55907
+** attribute name missing **
+(hbnb) update User 49faff9a-6318-451f-87b6-910505c55907 first_name "Betty"
+(hbnb) all
+["[User] (49faff9a-6318-451f-87b6-910505c55907) {'created_at': datetime.datetime(
+2017, 10, 2, 3, 10, 25, 903293), 'id': '49faff9a-6318-451f-87b6-910505c55907',
+'updated_at': datetime.datetime(2017, 10, 2, 3, 10, 25, 903300), "first_name": "Betty"}"]
+(hbnb)
+```
+**Destroy an object**
+```
+(hbnb) destroy
+** class name missing **
+(hbnb) destroy User
+** instance id missing **
+(hbnb) destroy User 49faff9a-6318-451f-87b6-910505c55907
+(hbnb)
+(hbnb) destroy User 49faff9a-6318-451f-87b6-910505c55907
+** no instance found **
+(hbnb)
+(hbnb) quit
+$
+```
