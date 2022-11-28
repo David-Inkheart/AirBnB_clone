@@ -52,7 +52,7 @@ class HBNBCommand(cmd.Cmd):
             inst = Place()
         elif arg == "State":
             inst = State()
-        elif aeg == "City":
+        elif arg == "City":
             inst = City()
         elif arg == "Amenity":
             inst = Amenity()
@@ -73,18 +73,20 @@ class HBNBCommand(cmd.Cmd):
         storage = FileStorage().all()
         if arg_list[0] == '':
             print('** class name missing **')
-        elif arg_list[0] and arg_list[1] == '#':
+        elif arg_list[0]:
             for key in storage:
                 if arg_list[0] in key.split('.'):
-                    print("** instance id missing **")
-                    return
+                    if arg_list[1] and arg_list[1] != '#':
+                        for key in storage:
+                            if key == arg_list[0] + "." + arg_list[1]:
+                                print(storage[key])
+                                return
+                        print('** no instance found **')
+                        return
+                    elif arg_list[1] == '#':
+                        print("** instance id missing **")
+                        return
             print("** class doesn't exist **")
-        elif arg_list[1]:
-            for key in storage:
-                if key == arg_list[0] + "." + arg_list[1]:
-                    print(storage[key])
-                    return
-            print('** no instance found **')
 
     def do_destroy(self, arg):
         '''Deletes an instance based on the class name and id'''
@@ -93,6 +95,22 @@ class HBNBCommand(cmd.Cmd):
         storage = FileStorage().all()
         if arg_list[0] == '':
             print("** class name missing **")
+        elif arg_list[0]:
+            for key in storage:
+                if arg_list[0] in key.split('.'):
+                    if arg_list[1] and arg_list[1] != '#':
+                        for key in storage:
+                            if key == arg_list[0] + "." + arg_list[1]:
+                                storage.pop(key)
+                                return
+                        print('** no instance found **')
+                        return
+                    elif arg_list[1] == '#':
+                        print("** instance id missing **")
+                        return
+            print("** class doesn't exist **")
+
+        '''
         elif arg_list[0] and arg_list[1] == '#':
             for key in storage:
                 if arg_list[0] in key.split('.'):
@@ -104,7 +122,7 @@ class HBNBCommand(cmd.Cmd):
                 if key == arg_list[0] + '.' + arg_list[1]:
                     storage.pop(key)
                     return
-            print('** no instance found **')
+            print('** no instance found **')'''
 
     def do_all(self, arg):
         '''Prints all string representation of all
@@ -130,25 +148,28 @@ class HBNBCommand(cmd.Cmd):
         storage = FileStorage().all()
         if arg_list[0] == '':
             print("** class name missing **")
-        elif arg_list[0] and arg_list[1] == '#':
+        elif arg_list[0]:
             for key in storage:
                 if arg_list[0] in key.split('.'):
-                    print("** instance id missing **")
-                    return
+                    if arg_list[1] and arg_list[1] != '#':
+                        for key in storage:
+                            if key == arg_list[0] + '.' + arg_list[1]:
+                                if arg_list[2] == '#':
+                                    print("** attribute name missing **")
+                                elif arg_list[3] == '#':
+                                    print("** value missing **")
+                                else:
+                                    setattr(storage[key], arg_list[2],
+                                            json.loads(arg_list[3]))
+                                    storage[key].save()
+                                return
+                        print('** no instance found **')
+                        return
+                    elif arg_list[1] == '#':
+                        print("** instance id missing **")
+                        return
             print("** class doesn't exist **")
-        elif arg_list[1]:
-            for key in storage:
-                if key == arg_list[0] + '.' + arg_list[1]:
-                    if arg_list[2] == '#':
-                        print("** attribute name missing **")
-                    elif arg_list[3] == '#':
-                        print("** value missing **")
-                    else:
-                        setattr(storage[key], arg_list[2],
-                                json.loads(arg_list[3]))
-                        storage[key].save()
-                    return
-            print('** no instance found **')
+            
 
 
     def emptyline(self):
