@@ -78,7 +78,7 @@ class HBNBCommand(cmd.Cmd):
             storage.reload()
             print(inst.id)
         else:
-            print("** class doesn't exist **")    
+            print("** class doesn't exist **")
         inst.save()
         print(inst.id)
         '''
