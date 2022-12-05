@@ -1,0 +1,28 @@
+section.filters {
+	align-items: center;
+	display: flex;
+	background-color: white;
+	border: 1px solid #DDDDDD;
+	border-radius: 4px;
+	height: 70px;
+	width: 100%;
+}
+
+.btn {
+	color: #FFFFFF;
+	background-color: #FF5A5F;
+	border: 0;
+	border-radius: 4px;
+	font-size: 18px;
+	height: 48px;
+	width: 20%;
+}
+
+.btn-filters {
+	margin-left: auto;
+	margin-right: 30px;
+}
+
+.btn-filters:hover {
+	opacity: 90%;
+}

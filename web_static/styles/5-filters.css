@@ -1,0 +1,50 @@
+section.filters {
+	align-items: center;
+	display: flex;
+	background-color: white;
+	border: 1px solid #DDDDDD;
+	border-radius: 4px;
+	height: 70px;
+	width: 100%;
+}
+
+div.locations,
+div.amenities {
+	padding: 0 30px;
+	height: 100%;
+	width: 25%;
+}
+
+div.locations {
+	border-right: 1px solid #DDDDDD;
+}
+
+h3 {
+	font-weight: 600;
+	margin: 10px 0px 0px 0px;
+}
+
+h4 {
+	font-size: 14px;
+	font-weight: 400;
+	margin: 0;
+}
+
+.btn {
+	color: #FFFFFF;
+	background-color: #FF5A5F;
+	border: 0;
+	border-radius: 4px;
+	font-size: 18px;
+	height: 48px;
+	width: 20%;
+}
+
+.btn-filters {
+	margin-left: auto;
+	margin-right: 30px;
+}
+
+.btn-filters:hover {
+	opacity: 90%;
+}
