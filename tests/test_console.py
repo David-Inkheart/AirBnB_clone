@@ -1,242 +1,130 @@
 #!/usr/bin/python3
-"""Test Console"""
-from models.amenity import Amenity
-from models.base_model import BaseModel
-from models.city import City
-from models.place import Place
-from models.review import Review
-from models.state import State
+"""Unittest module for the console"""
+
 import unittest
-import sys
+import os
+import json
+import pycodestyle
 import io
-from contextlib import contextmanager
-from datetime import datetime
 from console import HBNBCommand
+from models.engine.file_storage import FileStorage
+from unittest.mock import patch
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 
 
-@contextmanager
-def captured_output():
-    new_out, new_err = io.StringIO(), io.StringIO()
-    old_out, old_err = sys.stdout, sys.stderr
-    try:
-        sys.stdout, sys.stderr = new_out, new_err
-        yield sys.stdout, sys.stderr
-    finally:
-        sys.stdout, sys.stderr = old_out, old_err
-
-
-class TestConsole(unittest.TestCase):
-    """
-    This test checks if all required classes
-    are created correctly.
-    """
-
-    def test_class(self):
-        """
-        This test checks if all required classes
-        are present
-        """
-
-        city1 = City()
-        amenity1 = Amenity()
-        state1 = State()
-        rev1 = Review()
-        place1 = Place()
-        self.assertEqual(city1.__class__.__name__, "City")
-        self.assertEqual(amenity1.__class__.__name__, "Amenity")
-        self.assertEqual(state1.__class__.__name__, "State")
-        self.assertEqual(rev1.__class__.__name__, "Review")
-        self.assertEqual(place1.__class__.__name__, "Place")
-
-    def test_father(self):
-        """
-        This test checks if all required classes
-        inherit correcly from BaseModel
-        """
-
-        city1 = City()
-        amenity1 = Amenity()
-        state1 = State()
-        rev1 = Review()
-        place1 = Place()
-        self.assertTrue(issubclass(city1.__class__, BaseModel))
-        self.assertTrue(issubclass(amenity1.__class__, BaseModel))
-        self.assertTrue(issubclass(state1.__class__, BaseModel))
-        self.assertTrue(issubclass(rev1.__class__, BaseModel))
-        self.assertTrue(issubclass(place1.__class__, BaseModel))
+class TestCommand(unittest.TestCase):
+    """Class that tests the console"""
 
     def setUp(self):
-        self.cli = HBNBCommand()
+        """Function empties file.json"""
+        FileStorage._FileStorage__objects = {}
+        FileStorage().save()
 
-        test_args = {'updated_at': datetime(2017, 2, 11, 23, 48, 34, 339879),
-                     'id': 'd3da85f2-499c-43cb-b33d-3d7935bc808c',
-                     'created_at': datetime(2017, 2, 11, 23, 48, 34, 339743),
-                     'name': 'Ace'}
-        self.model = BaseModel(test_args)
-        self.model.save()
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db', "Not FileStorage")
+    def test_create_fs(self):
+        """test the create command"""
+        storage = FileStorage()
+        storage.reload()
+        opt = r'[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[0-9a-f]{4}-[0-9a-f]{12}'
+        with self.assertRaises(AttributeError):
+            with patch('sys.stdout', new=io.StringIO()) as f:
+                HBNBCommand().onecmd("create BaseModel updated_at=0.0"
+                                     " created_at=0.0")
+        with patch('sys.stdout', new=io.StringIO()) as f:
+            HBNBCommand().onecmd('create User email="cluck@wanadoo.fr"'
+                                 ' password="jesustakethewheel"')
+        result = f.getvalue().strip()
+        self.assertRegex(result, opt)
+        email = storage.all()[f'User.{result}'].email
+        self.assertEqual(email, "cluck@wanadoo.fr")
+        password = storage.all()[f'User.{result}'].password
+        self.assertEqual(password, "jesustakethewheel")
+        with patch('sys.stdout', new=io.StringIO()) as f:
+            HBNBCommand().onecmd('create State johnny="bravo"'
+                                 ' number="7" pi="3.14"')
+        result = f.getvalue().strip()
+        self.assertRegex(result, opt)
+        johnny = storage.all()[f'State.{result}'].johnny
+        self.assertEqual(johnny, "bravo")
+        number = storage.all()[f'State.{result}'].number
+        self.assertEqual(number, '7')
+        pi = storage.all()[f'State.{result}'].pi
+        self.assertEqual(pi, '3.14')
+        with patch('sys.stdout', new=io.StringIO()) as f:
+            HBNBCommand().onecmd('create City johnny="bravo" number="7"'
+                                 ' pi="3.14"')
+        result = f.getvalue().strip()
+        self.assertRegex(result, opt)
+        johnny = storage.all()[f'City.{result}'].johnny
+        self.assertEqual(johnny, "bravo")
+        number = storage.all()[f'City.{result}'].number
+        self.assertEqual(number, '7')
+        pi = storage.all()[f'City.{result}'].pi
+        self.assertEqual(pi, '3.14')
+        with patch('sys.stdout', new=io.StringIO()) as f:
+            HBNBCommand().onecmd('create Amenity johnny="bravo"'
+                                 ' number="7" pi="3.14"')
+        result = f.getvalue().strip()
+        self.assertRegex(result, opt)
+        johnny = storage.all()[f'Amenity.{result}'].johnny
+        self.assertEqual(johnny, "bravo")
+        number = storage.all()[f'Amenity.{result}'].number
+        self.assertEqual(number, '7')
+        pi = storage.all()[f'Amenity.{result}'].pi
+        self.assertEqual(pi, '3.14')
+        with patch('sys.stdout', new=io.StringIO()) as f:
+            HBNBCommand().onecmd('create Place johnny="bravo"'
+                                 ' number="7" pi="3.14"')
+        result = f.getvalue().strip()
+        self.assertRegex(result, opt)
+        johnny = storage.all()[f'Place.{result}'].johnny
+        self.assertEqual(johnny, "bravo")
+        number = storage.all()[f'Place.{result}'].number
+        self.assertEqual(number, '7')
+        pi = storage.all()[f'Place.{result}'].pi
+        self.assertEqual(pi, '3.14')
+        with patch('sys.stdout', new=io.StringIO()) as f:
+            HBNBCommand().onecmd('create Review johnny="bravo"'
+                                 ' number="7" pi="3.14"')
+        result = f.getvalue().strip()
+        self.assertRegex(result, opt)
+        johnny = storage.all()[f'Review.{result}'].johnny
+        self.assertEqual(johnny, "bravo")
+        number = storage.all()[f'Review.{result}'].number
+        self.assertEqual(number, '7')
+        pi = storage.all()[f'Review.{result}'].pi
+        self.assertEqual(pi, '3.14')
+        with patch('sys.stdout', new=io.StringIO()) as f:
+            HBNBCommand().onecmd('create')
+        opt = '** class name missing **\n'
+        self.assertEqual(f.getvalue(), opt)
+        with patch('sys.stdout', new=io.StringIO()) as f:
+            HBNBCommand().onecmd('create NotClass')
+        opt = '** class doesn\'t exist **\n'
+        self.assertEqual(f.getvalue(), opt)
 
-    def tearDown(self):
-        self.cli.do_destroy("BaseModel d3da85f2-499c-43cb-b33d-3d7935bc808c")
+    def testPycodeStyle(self):
+        """Pycodestyle test for console.py"""
+        style = pycodestyle.StyleGuide(quiet=True)
+        p = style.check_files(['console.py'])
+        self.assertEqual(p.total_errors, 0, "fix pep8")
 
-    '''def test_quit(self):
-        with self.assertRaises(SystemExit):
-            self.cli.do_quit(self.cli)'''
-
-    def test_show_correct(self):
-        with captured_output() as (out, err):
-            self.cli.do_show("BaseModel d3da85f2-499c-43cb-b33d-3d7935bc808c")
-        output = out.getvalue().strip()
-        self.assertFalse("2017, 2, 11, 23, 48, 34, 339879" in output)
-        '''self.assertTrue('2017, 2, 11, 23, 48, 34, 339743' in output)'''
-
-    def test_show_error_no_args(self):
-        with captured_output() as (out, err):
-            self.cli.do_show('')
-        output = out.getvalue().strip()
-        self.assertEqual(output, "** class name missing **")
-
-    def test_show_error_missing_arg(self):
-        with captured_output() as (out, err):
-            self.cli.do_show("BaseModel")
-        output = out.getvalue().strip()
-        self.assertEqual(output, "** instance id missing **")
-
-    def test_show_error_invalid_class(self):
-        with captured_output() as (out, err):
-            self.cli.do_show("Human 1234-5678-9101")
-        output = out.getvalue().strip()
-        self.assertEqual(output, "** class doesn't exist **")
-
-    def test_show_error_class_missing(self):
-        with captured_output() as (out, err):
-            self.cli.do_show("d3da85f2-499c-43cb-b33d-3d7935bc808c")
-        output = out.getvalue().strip()
-        self.assertEqual(output, "** class doesn't exist **")
-
-    def test_create(self):
-        with captured_output() as (out, err):
-            self.cli.do_create('')
-        output = out.getvalue().strip()
-        self.assertEqual(output, "** class name missing **")
-
-        with captured_output() as (out, err):
-            self.cli.do_create("BaseModel")
-        output = out.getvalue().strip()
-
-        with captured_output() as (out, err):
-            self.cli.do_show("BaseModel {}".format(output))
-        output2 = out.getvalue().strip()
-        self.assertTrue(output in output2)
-
-    def test_destroy_correct(self):
-        test_args = {'updated_at': datetime(2017, 2, 12, 00, 31, 53, 331997),
-                     'id': 'f519fb40-1f5c-458b-945c-2ee8eaaf4900',
-                     'created_at': datetime(2017, 2, 12, 00, 31, 53, 331900)}
-        testmodel = BaseModel(test_args)
-        testmodel.save()
-        self.cli.do_destroy("BaseModel f519fb40-1f5c-458b-945c-2ee8eaaf4900")
-
-        with captured_output() as (out, err):
-            self.cli.do_show("BaseModel f519fb40-1f5c-458b-945c-2ee8eaaf4900")
-        output = out.getvalue().strip()
-        self.assertEqual(output, "** no instance found **")
-
-    def test_destroy_error_missing_id(self):
-        with captured_output() as (out, err):
-            self.cli.do_destroy("BaseModel")
-        output = out.getvalue().strip()
-        self.assertEqual(output, "** instance id missing **")
-
-    def test_destroy_error_class_missing(self):
-        with captured_output() as (out, err):
-            self.cli.do_destroy("d3da85f2-499c-43cb-b33d-3d7935bc808c")
-        output = out.getvalue().strip()
-        self.assertEqual(output, "** class doesn't exist **")
-
-    def test_destroy_error_invalid_class(self):
-        with captured_output() as (out, err):
-            self.cli.do_destroy("Human d3da85f2-499c-43cb-b33d-3d7935bc808c")
-        output = out.getvalue().strip()
-        self.assertEqual(output, "** class doesn't exist **")
-
-    def test_destroy_error_invalid_id(self):
-        with captured_output() as (out, err):
-            self.cli.do_destroy("BaseModel " +
-                                "f519fb40-1f5c-458b-945c-2ee8eaaf4900")
-        output = out.getvalue().strip()
-        self.assertEqual(output, "** no instance found **")
-
-    '''def test_all_correct(self):
-        test_args = {'updated_at': datetime(2017, 2, 12, 00, 31, 53, 331997),
-                     'id': 'f519fb40-1f5c-458b-945c-2ee8eaaf4900',
-                     'created_at': datetime(2017, 2, 12, 00, 31, 53, 331900)}
-        testmodel = BaseModel(test_args)
-        testmodel.save()
-        with captured_output() as (out, err):
-            self.cli.do_all("")
-        output = out.getvalue().strip()
-        self.assertTrue("d3da85f2-499c-43cb-b33d-3d7935bc808c" in output)
-        self.assertTrue("f519fb40-1f5c-458b-945c-2ee8eaaf4900" in output)
-        self.assertFalse("123-456-abc" in output)
-
-    def test_all_correct_with_class(self):
-        with captured_output() as (out, err):
-            self.cli.do_all("BaseModel")
-        output = out.getvalue().strip()
-        self.assertTrue(len(output) > 0)
-        self.assertTrue("d3da85f2-499c-43cb-b33d-3d7935bc808c" in output)'''
-
-    def test_all_error_invalid_class(self):
-        with captured_output() as (out, err):
-            self.cli.do_all("Human")
-        output = out.getvalue().strip()
-        self.assertEqual(output, "** class doesn't exist **")
-
-    '''def test_update_correct(self):
-        with captured_output() as (out, err):
-            self.cli.do_update("BaseModel " +
-                               "d3da85f2-499c-43cb-b33d-3d7935bc808c name Bay")
-        output = out.getvalue().strip()
-        self.assertEqual(output, '')
-
-        with captured_output() as (out, err):
-            self.cli.do_show("BaseModel d3da85f2-499c-43cb-b33d-3d7935bc808c")
-        output = out.getvalue().strip()
-        self.assertTrue("Bay" in output)
-        self.assertFalse("Ace" in output)'''
-
-    def test_update_error_invalid_id(self):
-        with captured_output() as (out, err):
-            self.cli.do_update("BaseModel 123-456-abc name Cat")
-        output = out.getvalue().strip()
-        self.assertEqual(output, "** no instance found **")
-
-    '''def test_update_error_no_id(self):
-        with captured_output() as (out, err):
-            self.cli.do_update("BaseModel name Cat")
-        output = out.getvalue().strip()
-        self.assertEqual(output, "** instance id missing **")'''
-
-    def test_update_error_invalid_class(self):
-        with captured_output() as (out, err):
-            self.cli.do_update("Human " +
-                               "d3da85f2-499c-43cb-b33d-3d7935bc808c name Cat")
-        output = out.getvalue().strip()
-        self.assertEqual(output, "** class doesn't exist **")
-
-    '''def test_update_error_no_class(self):
-        with captured_output() as (out, err):
-            self.cli.do_update("d3da85f2-499c-43cb-b33d-3d7935bc808c name Cat")
-        output = out.getvalue().strip()
-        self.assertEqual(output, "** class name missing **")'''
-
-    '''def test_update_error_missing_value(self):
-        with captured_output() as (out, err):
-            self.cli.do_update("BaseModel " +
-                               "d3da85f2-499c-43cb-b33d-3d7935bc808c name")
-        output = out.getvalue().strip()
-        self.assertEqual(output, "** value missing **")'''
+    def test_doc_console(self):
+        self.assertIsNotNone(HBNBCommand.__doc__)
+        self.assertIsNotNone(HBNBCommand.do_all.__doc__)
+        self.assertIsNotNone(HBNBCommand.do_create.__doc__)
+        self.assertIsNotNone(HBNBCommand.do_destroy.__doc__)
+        self.assertIsNotNone(HBNBCommand.do_quit.__doc__)
+        self.assertIsNotNone(HBNBCommand.do_EOF.__doc__)
+        self.assertIsNotNone(HBNBCommand.do_count.__doc__)
+        self.assertIsNotNone(HBNBCommand.do_update.__doc__)
+        self.assertIsNotNone(HBNBCommand.emptyline.__doc__)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
