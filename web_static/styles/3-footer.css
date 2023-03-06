@@ -1,18 +1,12 @@
-.foot {
-	background-color: white;
-	border-top: 1px solid #CCCCCC;
-	height: 60px;
-	width: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.absolute-foot {
-	position: absolute;
-	bottom: 0;
-}
-
-.dynamic-foot {
-	flex-shrink: 0;
+/* Footer style */
+footer {
+  align-items: center;
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+  bottom: 0;
+  display: flex;
+  height: 60px;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
 }
